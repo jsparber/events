@@ -1,0 +1,109 @@
+---
+layout: default
+title: Submit a Event
+permalink: /event-form/
+---
+
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/custom.css" rel="stylesheet">
+
+<div class="container">
+  <div class="row">
+	<div class="col-md-10 col-md-offset-1">
+	<h1>Submit a Event</h1>
+	<p class="lead">Your posting will be displayed on our <a
+href="/events/">events page</a>.</p>
+	<p class="lead"><a href="http://opensourcedesign.net/code-of-conduct/">We have a code of conduct</a>. Please read it before submitting your event.</p>
+	<form method="POST" action="https://api.staticman.net/v2/entry/opensourcedesign/events/gh-pages/events">
+	  <input name="options[redirect]" type="hidden" value="http://opensourcedesign.net/events/thank-you/">
+	  <input name="fields[status]" type="hidden" value="searching">
+	  <input name="fields[date_posted]" type="hidden">
+	  <input name="fields[layout]" type="hidden" value="events">
+	  <input name="options[slug]" type="hidden" id="slug" value="">
+	  <!--div class="form-group">
+		<label for="role">Role</label>
+		<p class="help-block">The type of designer you are looking for. You could use one of these: graphic designer, icon designer, interaction designer, information architect, user researcher, content strategist, accessibility expert.</p>
+		<input type="text" class="form-control" id="role" placeholder="E.g. Graphic designer" required>
+	  </div-->
+	  <fieldset>
+		<legend>About the Event</legend>
+		<div class="form-group">
+		  <label for="organization">Event name</label>
+		  <input type="text"
+			class="form-control"
+			id="organization"
+			placeholder="e.g. AcmeProjects"
+			name="fields[organization]"
+			required>
+		</div>
+		<div class="form-group">
+		  <label for="org_url">Event website</label>
+		  <input type="url"
+			class="form-control"
+			id="org_url"
+			placeholder="e.g. https://acmeprojects.org"
+			name="fields[org_url]"
+			required>
+		</div>
+	  </fieldset>
+	  </fieldset>
+	  <button type="submit" href="thankyou.html" class="btn btn-primary btn-lg">Submit your event to Open Source Design</button>
+	</form>
+	</div>
+  </div>
+</div>
+
+<script src="/events/js/jquery.min.js"></script>
+<script src="/events/js/bootstrap.min.js"></script>
+<script>
+
+	function compensation() {
+	  if ( $("#gratis").is(":checked") ) {
+		$("#paid_details").parent().slideUp();
+	  }
+	  else {
+		$("#paid_details").parent().slideDown();
+	  }
+	}
+
+	function slug (str) {
+	  str = str.replace(/^\s+|\s+$/g, ''); // trim
+	  str = str.toLowerCase();
+
+	  // remove accents, swap ñ for n, etc
+	  var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
+	  var to   = "aaaaaeeeeeiiiiooooouuuunc------";
+	  for (var i=0, l=from.length ; i<l ; i++) {
+		str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+	  }
+
+	  str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+		.replace(/\s+/g, '-') // collapse whitespace and replace by -
+		.replace(/-+/g, '-'); // collapse dashes
+
+	  return str;
+	}
+
+	$(document).ready(function() {
+
+	  $('input#title').keyup(function (e) {
+		$('input#slug').val(slug(e.target.value));
+	  });
+
+	  compensation();
+
+	  $("input:radio").click(function(){
+		compensation();
+	  });
+
+	  var date = new Date();
+	  var day = ("0" + date.getDate()).slice(-2);
+	  var month = ("0"+(date.getMonth()+1)).slice(-2);
+	  var year = date.getFullYear();
+
+	  var datestring = year + "-" + month + "-" + day;
+
+	  $('[name="fields[date_posted]"]').val(datestring);
+
+  });
+</script>
